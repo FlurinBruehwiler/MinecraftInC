@@ -11,6 +11,7 @@ Goals:
 - Water rendering :)
 - Player controller
 - Shader based ambient occlusion
+- Multiplayer
 
 ## Build & Run
 TODO
