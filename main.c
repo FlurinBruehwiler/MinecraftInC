@@ -1,5 +1,7 @@
 #include <stdlib.h>
 #include "raylib.h"
+#include <string.h>
+#include <stdio.h>
 
 typedef enum {
     LEFT,
@@ -52,10 +54,41 @@ typedef struct World {
     Chunk* chunks;
 } World;
 
+typedef struct BlockTexture {
+    const char* name;
+    Vector2 topLeft;
+    Vector2 bottomRight;
+} BlockTexture;
+
+typedef struct BlockDefinition {
+    int id;
+    char name[20];
+    BlockTexture leftTexture;
+    BlockTexture rightTexture;
+    BlockTexture topTexture;
+    BlockTexture bottomTexture;
+    BlockTexture awayTexture;
+    BlockTexture closeTexture;
+} BlockDefinition;
+
+BlockDefinition Air = {};
+BlockDefinition JoaChoco = {};
+BlockDefinition JoaMini = {};
+BlockDefinition JoaSchool = {};
+BlockDefinition JoaTruck = {};
+
+BlockTexture joaChocoTexture = {"joaChoco" };
+BlockTexture joaMiniTexture = {"joaMini"};
+BlockTexture joaSchoolTexture = {"joaSchool"};
+BlockTexture joaTruckTexture = {"joaTruck"};
+
+const int blockCount = 5;
+int textureWidth = 0;
+
 void UpdateDrawFrame(Model model, Camera3D camera_3d);
-void AddQuadFor(IntVector3 pos, VertexArray* vertices, BlockFace block_face);
-void AddQuad(IntVector3 pos, VertexArray* vertices, Vector3 topLeft, Vector3 topRight, Vector3 bottomLeft, Vector3 bottomRight);
-void AddBlock(IntVector3 pos, VertexArray* floatArray);
+void AddQuadFor(IntVector3 pos, VertexArray* vertices, BlockFace block_face, BlockDefinition blockDefinition);
+void AddQuad(IntVector3 pos, VertexArray* vertices, Vector3 topLeft, Vector3 topRight, Vector3 bottomLeft, Vector3 bottomRight, BlockTexture blockTexture);
+void AddBlock(IntVector3 pos, VertexArray* floatArray, BlockDefinition blockDefinition);
 
 struct VertexArray* create_vertex_array(int capacity) {
     struct VertexArray* a = malloc(sizeof(VertexArray));
@@ -69,14 +102,102 @@ void add_vertex(VertexArray* float_array, Vector3 pos, Vector2 texCoord) {
     float_array->pos++;
 }
 
+void all_texture(BlockDefinition* blockDefinition, BlockTexture blockTexture){
+    blockDefinition->leftTexture = blockTexture;
+    blockDefinition->rightTexture = blockTexture;
+    blockDefinition->closeTexture = blockTexture;
+    blockDefinition->awayTexture = blockTexture;
+    blockDefinition->topTexture = blockTexture;
+    blockDefinition->bottomTexture = blockTexture;
+}
+
+BlockDefinition* initialize_blocks(){
+    BlockDefinition* blockDefinitions = malloc(sizeof(BlockDefinition) * blockCount);
+
+    Air.id = 0;
+    strcpy(Air.name, "Air");
+    blockDefinitions[0] = Air;
+
+    JoaChoco.id = 1;
+    strcpy(JoaChoco.name, "JoaChoco");
+    all_texture(&JoaChoco, joaChocoTexture);
+    blockDefinitions[1] = JoaChoco;
+
+    JoaMini.id = 2;
+    strcpy(JoaMini.name, "JoaMini");
+    all_texture(&JoaMini, joaMiniTexture);
+    blockDefinitions[2] = JoaMini;
+
+    JoaSchool.id = 3;
+    strcpy(JoaSchool.name, "JoaSchool");
+    all_texture(&JoaSchool, joaSchoolTexture);
+    blockDefinitions[3] = JoaSchool;
+
+    JoaTruck.id = 4;
+    strcpy(JoaTruck.name, "JoaTruck");
+    all_texture(&JoaTruck, joaTruckTexture);
+    blockDefinitions[4] = JoaTruck;
+
+    return blockDefinitions;
+}
+
+Texture LoadTextures(){
+    const int textureCount = 4;
+    BlockTexture blockTexture[textureCount];
+    blockTexture[0] = joaChocoTexture;
+    blockTexture[1] = joaMiniTexture;
+    blockTexture[2] = joaSchoolTexture;
+    blockTexture[3] = joaTruckTexture;
+
+    int maxHeight = 0;
+    Texture2D textures[textureCount];
+    for (int i = 0; i < textureCount; ++i) {
+        char result[100];
+        strcpy(result, "textures/");
+        strcat(result, blockTexture[i].name);
+        strcat(result, ".png");
+        Texture2D texture = LoadTexture(result);
+
+        if(texture.height > maxHeight){
+            maxHeight = texture.height;
+        }
+        textureWidth += texture.width;
+
+        textures[i] = texture;
+    }
+
+    RenderTexture2D target = LoadRenderTexture(textureWidth, maxHeight);
+
+    BeginTextureMode(target);
+
+    int currentWidth = 0;
+
+    for (int i = 0; i < textureCount; ++i) {
+        Texture2D texture2D = textures[i];
+        DrawTexture(texture2D, currentWidth, 0, WHITE);
+        blockTexture[i].topLeft = (Vector2){(float)currentWidth, 0};
+        blockTexture[i].bottomRight = (Vector2){(float)currentWidth + (float)texture2D.width, (float)texture2D.height};
+
+        currentWidth += texture2D.width;
+    }
+
+    EndTextureMode();
+
+    Image image = LoadImageFromTexture(target.texture);
+    ExportImage(image, "textureAtlas.png");
+
+    return target.texture;
+}
+
 int main()
 {
-    InitWindow(screenWidth, screenHeight, "raylib [core] example - basic window");
+    BlockDefinition* blocks = initialize_blocks();
+    InitWindow(screenWidth, screenHeight, "Minecraft in C");
 
     SetTargetFPS(60);
     DisableCursor();
 
-    Texture2D texture = LoadTexture("joa.png");
+    Texture texture = LoadTextures();
 
     World *world = malloc(sizeof *world);
 
@@ -88,24 +209,28 @@ int main()
     for (int x = 0; x < 32; ++x) {
         for (int y = 0; y < 32; ++y) {
             for (int z = 0; z < 32; ++z) {
-                int block_id = GetRandomValue(0, 1);
-                chunk->blocks[x][y][z] = (Block){ block_id };
+                int block_id = GetRandomValue(0, 4);
+                chunk->blocks[x][y][z] = (Block){ (char)block_id };
             }
         }
     }
 
     Mesh *mesh = malloc(sizeof *mesh);
 
-    const int blockCount = 32 * 32 * 32;
+    const int totalBlockCount = 32 * 32 * 32;
 
-    VertexArray* vertexArray = create_vertex_array(48 * 3 * blockCount);
+    VertexArray* vertexArray = create_vertex_array(48 * 3 * totalBlockCount);
 
     for (int x = 0; x < 32; ++x) {
         for (int y = 0; y < 32; ++y) {
             for (int z = 0; z < 32; ++z) {
                 Block block = chunk->blocks[x][y][z];
+
+                BlockDefinition blockDefinition = blocks[block.block_id];
+                printf("%d \n", blockDefinition.id);
+
                 if(block.block_id != 0){
-                    AddBlock((IntVector3){x, y, z}, vertexArray);
+                    AddBlock((IntVector3){x, y, z}, vertexArray, blockDefinition);
                 }
             }
         }
@@ -167,54 +292,64 @@ void UpdateDrawFrame(const Model model, const Camera3D camera_3d)
     EndDrawing();
 }
 
-void AddBlock(IntVector3 pos, VertexArray* floatArray)
+void AddBlock(IntVector3 pos, VertexArray* floatArray, BlockDefinition blockDefinition)
 {
-    AddQuadFor(pos, floatArray, LEFT);
-    AddQuadFor(pos, floatArray, RIGHT);
-    AddQuadFor(pos, floatArray, TOP);
-    AddQuadFor(pos, floatArray, BOTTOM);
-    AddQuadFor(pos, floatArray, AWAY);
-    AddQuadFor(pos, floatArray, CLOSE);
+    AddQuadFor(pos, floatArray, LEFT, blockDefinition);
+    AddQuadFor(pos, floatArray, RIGHT, blockDefinition);
+    AddQuadFor(pos, floatArray, TOP, blockDefinition);
+    AddQuadFor(pos, floatArray, BOTTOM, blockDefinition);
+    AddQuadFor(pos, floatArray, AWAY, blockDefinition);
+    AddQuadFor(pos, floatArray, CLOSE, blockDefinition);
 }
 
-void AddQuadFor(IntVector3 pos, VertexArray* vertices, BlockFace block_face)
+void AddQuadFor(IntVector3 pos, VertexArray* vertices, BlockFace block_face, BlockDefinition blockDefinition)
 {
     switch (block_face)
     {
         case LEFT:
-            AddQuad(pos, vertices, topLeftAway, topLeftClose, bottomLeftAway, bottomLeftClose);
+            AddQuad(pos, vertices, topLeftAway, topLeftClose, bottomLeftAway, bottomLeftClose, blockDefinition.leftTexture);
             break;
         case RIGHT:
-            AddQuad(pos, vertices, topRightClose, topRightAway, bottomRightClose, bottomRightAway);
+            AddQuad(pos, vertices, topRightClose, topRightAway, bottomRightClose, bottomRightAway, blockDefinition.rightTexture);
             break;
         case TOP:
-            AddQuad(pos, vertices, topLeftAway, topRightAway, topLeftClose, topRightClose);
+            AddQuad(pos, vertices, topLeftAway, topRightAway, topLeftClose, topRightClose, blockDefinition.topTexture);
             break;
         case BOTTOM:
-            AddQuad(pos, vertices, bottomLeftClose, bottomRightClose, bottomLeftAway, bottomRightAway);
+            AddQuad(pos, vertices, bottomLeftClose, bottomRightClose, bottomLeftAway, bottomRightAway, blockDefinition.bottomTexture);
             break;
         case AWAY:
-            AddQuad(pos, vertices, topRightAway, topLeftAway, bottomRightAway, bottomLeftAway);
+            AddQuad(pos, vertices, topRightAway, topLeftAway, bottomRightAway, bottomLeftAway, blockDefinition.awayTexture);
             break;
         case CLOSE:
-            AddQuad(pos, vertices, topLeftClose, topRightClose, bottomLeftClose, bottomRightClose);
+            AddQuad(pos, vertices, topLeftClose, topRightClose, bottomLeftClose, bottomRightClose, blockDefinition.closeTexture);
             break;
     }
 }
 
 Vector3 AddVector(IntVector3 vec1, Vector3 vec2)
 {
-    Vector3 a = { vec1.x + vec2.x,vec1.y + vec2.y,vec1.z + vec2.z };
+    Vector3 a = { (float)vec1.x + vec2.x,(float)vec1.y + vec2.y,(float)vec1.z + vec2.z };
     return a;
 }
 
-void AddQuad(IntVector3 pos, VertexArray* vertices, Vector3 topLeft, Vector3 topRight, Vector3 bottomLeft, Vector3 bottomRight)
-{
-    add_vertex(vertices, AddVector(pos, topLeft), (Vector2){0, 0});
-    add_vertex(vertices, AddVector(pos, bottomLeft), (Vector2){0, 1});
-    add_vertex(vertices, AddVector(pos, topRight), (Vector2){1, 0});
-
-    add_vertex(vertices, AddVector(pos, topRight), (Vector2){1, 0});
-    add_vertex(vertices, AddVector(pos, bottomLeft), (Vector2){0, 1});
-    add_vertex(vertices, AddVector(pos, bottomRight), (Vector2){1, 1});
+float map(float value) {
+    return value / (float)textureWidth;
 }
+
+void AddQuad(IntVector3 pos, VertexArray* vertices, Vector3 topLeft, Vector3 topRight, Vector3 bottomLeft, Vector3 bottomRight, BlockTexture blockTexture)
+{
+    float left = map(blockTexture.topLeft.x);
+    float right = map(blockTexture.bottomRight.x);
+    float bottom = map(blockTexture.bottomRight.y);
+
+    add_vertex(vertices, AddVector(pos, topLeft), (Vector2){left, bottom});
+    add_vertex(vertices, AddVector(pos, bottomLeft), (Vector2){left, 0});
+    add_vertex(vertices, AddVector(pos, topRight), (Vector2){right, bottom});
+
+    add_vertex(vertices, AddVector(pos, topRight), (Vector2){right, bottom});
+    add_vertex(vertices, AddVector(pos, bottomLeft), (Vector2){left, 0});
+    add_vertex(vertices, AddVector(pos, bottomRight), (Vector2){right, 0});
+}
+
+

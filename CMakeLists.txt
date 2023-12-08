@@ -4,7 +4,7 @@ project(MinecraftInC C)
 # Generate compile_commands.json
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
-FILE(COPY textures/joa.png DESTINATION "${CMAKE_BINARY_DIR}")
+FILE(COPY textures DESTINATION "${CMAKE_BINARY_DIR}")
 
 # Dependencies
 set(RAYLIB_VERSION 4.5.0)
