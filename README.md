@@ -7,7 +7,7 @@ Goals:
 - Block face culling
 - Basic terrain generation
 - Basic building
-- Glas Blocks
+- Glass Blocks
 - Water rendering :)
 - Player controller
 - Shader based ambient occlusion
