@@ -9,11 +9,13 @@ BlockTexture* joaMiniTexture;
 BlockTexture* joaSchoolTexture;
 BlockTexture* joaTruckTexture;
 
+Texture textureAtlas;
+
 int textureWidth = 0;
 
 void InitializeTextureDefinitions();
 
-Texture LoadTextureAtlas() {
+void LoadTextureAtlas() {
     InitializeTextureDefinitions();
 
     const int textureCount = 4;
@@ -61,7 +63,7 @@ Texture LoadTextureAtlas() {
     Image image = LoadImageFromTexture(target.texture);
     ExportImage(image, "textureAtlas.png");
 
-    return target.texture;
+    textureAtlas = target.texture;
 }
 
 void InitializeTextureDefinitions(){

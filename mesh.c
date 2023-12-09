@@ -1,4 +1,5 @@
 #include <malloc.h>
+#include <stdio.h>
 #include "structs.h"
 #include "mesh.h"
 #include "textures.h"
@@ -15,7 +16,70 @@ Vector3 topRightAway = (Vector3) {1,1,1};
 Vector3 topRightClose = (Vector3) {0,1,1};
 Vector3 topLeftClose = (Vector3) {0,1,0};
 
+void RegenDirtyChunks(){
+    for (int x = 0; x < 10; ++x) {
+        for (int y = 0; y < 10; ++y) {
+            for (int z = 0; z < 10; ++z) {
+                if(chunks[x][y][z].isDirty && !chunks[x][y][z].isEmptyChunk){
+                    printf("regen chunk \n");
+                    chunks[x][y][z].isDirty = false;
+                    GenMesh(&chunks[x][y][z]);
+                }
+            }
+        }
+    }
+}
 
+void GenMesh(Chunk* chunk){
+    if(chunk->hasMesh){
+        UnloadMesh(*chunk->mesh);
+        free(chunk->mesh);
+    }
+
+    Mesh *mesh = malloc(sizeof(Mesh));
+
+    VertexArray* vertexArray = create_vertex_array(48 * 3 * totalBlockCount);
+
+    for (int x = 0; x < 32; ++x) {
+        for (int y = 0; y < 32; ++y) {
+            for (int z = 0; z < 32; ++z) {
+                Block block = chunk->blocks[x][y][z];
+
+                if(block.block_id != 0){
+                    AddBlock(LocalToGlobal(chunk, (IntVector3){x,y,z}), vertexArray, block.block_id);
+                }
+            }
+        }
+    }
+
+    float* vertices = malloc(sizeof(float) * vertexArray->pos * 3);
+    float* texCoords = malloc(sizeof(float) * vertexArray->pos * 2);
+
+    for (int i = 0; i < vertexArray->pos - 1; ++i) {
+
+        Vertex vertex = vertexArray->array[i];
+
+        vertices[i * 3] = vertex.pos.x;
+        vertices[i * 3 + 1] = vertex.pos.y;
+        vertices[i * 3 + 2] = vertex.pos.z;
+
+        texCoords[i * 2] = vertex.textCoord.x;
+        texCoords[i * 2 + 1] = vertex.textCoord.y;
+    }
+
+    mesh->vertexCount = vertexArray->pos;
+    mesh->triangleCount = vertexArray->pos;
+    mesh->vertices = vertices;
+    mesh->texcoords = texCoords;
+
+    UploadMesh(mesh, false);
+    Model model = LoadModelFromMesh(*mesh);
+
+    model.materials[0].maps->texture = textureAtlas;
+    chunk->model = model;
+    chunk->mesh = mesh;
+    chunk->hasMesh = true;
+}
 
 bool IsAir(int x, int y, int z){
 

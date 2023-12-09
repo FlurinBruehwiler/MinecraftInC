@@ -3,9 +3,22 @@
 
 Chunk chunks[10][10][10];
 
+const int totalBlockCount = 32 * 32 * 32;
+
+
 void InitWorld()
 {
+    for (int x = 0; x < 10; ++x) {
+        for (int y = 0; y < 10; ++y) {
+            for (int z = 0; z < 10; ++z) {
+                chunks[x][y][z].isEmptyChunk = true;
+            }
+        }
+    }
+
     chunks[0][0][0].pos = (IntVector3){0, 0, 0};
+    chunks[0][0][0].isEmptyChunk = false;
+    chunks[0][0][0].isDirty = true;
 
     for (int x = 0; x < 32; ++x) {
         for (int y = 0; y < 32; ++y) {
@@ -17,7 +30,7 @@ void InitWorld()
     }
 }
 
-bool GetChunkOfBlock(IntVector3 pos, Chunk* chunk)
+bool GetChunkOfBlock(IntVector3 pos, Chunk** chunk)
 {
     int chunkPosX = pos.x >= 0 ? pos.x / 32 : (pos.x - 31) / 32;
     int chunkPosY = pos.y >= 0 ? pos.y / 32 : (pos.y - 31) / 32;
@@ -27,7 +40,7 @@ bool GetChunkOfBlock(IntVector3 pos, Chunk* chunk)
         return false;
     }
 
-    *chunk = chunks[chunkPosX][chunkPosY][chunkPosZ];
+    *chunk = &chunks[chunkPosX][chunkPosY][chunkPosZ];
     return true;
 }
 

@@ -34,7 +34,7 @@ bool Raycast(Vector3 pos, Vector3 dir, float length, IntVector3 * hitBlock, IntV
         Block block;
         if(GetBlockAtPos(start, &block)){
             if(block.block_id != 0){
-                *hitBlock = block;
+                *hitBlock = start;
                 return true;
             }
         }else{

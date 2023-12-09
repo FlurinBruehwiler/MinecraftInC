@@ -11,6 +11,8 @@ extern BlockTexture* joaTruckTexture;
 
 extern int textureWidth;
 
-Texture LoadTextureAtlas();
+extern Texture textureAtlas;
+
+void LoadTextureAtlas();
 
 #endif

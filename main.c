@@ -1,6 +1,4 @@
-#include <stdlib.h>
 #include "raylib.h"
-#include "structs.h"
 #include "textures.h"
 #include "blocks.h"
 #include "mesh.h"
@@ -17,9 +15,9 @@ int main()
 {
     InitWindow(screenWidth, screenHeight, "Minecraft in C");
 
-    InitializeSkybox();
+    //InitializeSkybox();
 
-    Texture textureAtlas = LoadTextureAtlas();
+    LoadTextureAtlas();
 
     initialize_blocks();
 
@@ -28,56 +26,21 @@ int main()
 
     InitWorld();
 
-    Mesh *mesh = malloc(sizeof(Mesh));
-
-    const int totalBlockCount = 32 * 32 * 32;
-
-    VertexArray* vertexArray = create_vertex_array(48 * 3 * totalBlockCount);
-
-    Chunk* chunk = &chunks[0][0][0];
-
-    for (int x = 0; x < 32; ++x) {
-        for (int y = 0; y < 32; ++y) {
-            for (int z = 0; z < 32; ++z) {
-                Block block = chunk->blocks[x][y][z];
-
-                if(block.block_id != 0){
-                    AddBlock(LocalToGlobal(chunk, (IntVector3){x,y,z}), vertexArray, block.block_id);
-                }
-            }
-        }
-    }
-
-    float* vertices = malloc(sizeof(float) * vertexArray->pos * 3);
-    float* texCoords = malloc(sizeof(float) * vertexArray->pos * 2);
-
-    for (int i = 0; i < vertexArray->pos - 1; ++i) {
-
-        Vertex vertex = vertexArray->array[i];
-
-        vertices[i * 3] = vertex.pos.x;
-        vertices[i * 3 + 1] = vertex.pos.y;
-        vertices[i * 3 + 2] = vertex.pos.z;
-
-        texCoords[i * 2] = vertex.textCoord.x;
-        texCoords[i * 2 + 1] = vertex.textCoord.y;
-    }
-
-    mesh->vertexCount = vertexArray->pos;
-    mesh->triangleCount = vertexArray->pos;
-    mesh->vertices = vertices;
-    mesh->texcoords = texCoords;
-
-    UploadMesh(mesh, false);
-    const Model model = LoadModelFromMesh(*mesh);
-    model.materials[0].maps->texture = textureAtlas;
-
     InitPlayer();
 
     while (!WindowShouldClose())
     {
+        RegenDirtyChunks();
         UpdatePlayer();
-        UpdateDrawFrame(model);
+        for (int x = 0; x < 10; ++x) {
+            for (int y = 0; y < 10; ++y) {
+                for (int z = 0; z < 10; ++z) {
+                    if(chunks[x][y][z].hasMesh){
+                        UpdateDrawFrame(chunks[x][y][z].model);
+                    }
+                }
+            }
+        }
     }
 
     CloseWindow();

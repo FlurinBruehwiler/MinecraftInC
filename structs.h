@@ -36,6 +36,10 @@ typedef struct Chunk {
     IntVector3 pos;
     Block blocks[32][32][32];
     bool isDirty;
+    Model model;
+    Mesh* mesh;
+    bool hasMesh;
+    bool isEmptyChunk;
 } Chunk;
 
 typedef struct BlockTexture {
