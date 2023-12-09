@@ -27,7 +27,12 @@ endif()
 
 set(CMAKE_C_STANDARD 11)
 
-add_executable(${PROJECT_NAME} main.c)
+add_executable(${PROJECT_NAME} main.c textures.c
+        structs.h
+        textures.h
+        blocks.c
+        blocks.h
+        mesh.c)
 
 target_link_libraries(${PROJECT_NAME} raylib)
 
