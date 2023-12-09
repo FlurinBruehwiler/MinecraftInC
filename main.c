@@ -6,11 +6,12 @@
 #include "mesh.h"
 #include "skybox.h"
 #include "world.h"
+#include "player.h"
 
 int screenWidth = 1500;
 int screenHeight = 1000;
 
-void UpdateDrawFrame(Model model, Camera3D camera_3d);
+void UpdateDrawFrame(Model model);
 
 int main()
 {
@@ -71,16 +72,12 @@ int main()
     const Model model = LoadModelFromMesh(*mesh);
     model.materials[0].maps->texture = textureAtlas;
 
-    Camera3D camera_3d = { };
-    camera_3d.position = (Vector3) { 2, 2, 2};
-    camera_3d.target = (Vector3) {0,0,0};
-    camera_3d.up = (Vector3) {0, 1, 0};
-    camera_3d.fovy = 100;
+    InitPlayer();
 
     while (!WindowShouldClose())
     {
-        UpdateCamera(&camera_3d, CAMERA_CUSTOM);
-        UpdateDrawFrame(model, camera_3d);
+        UpdatePlayer();
+        UpdateDrawFrame(model);
     }
 
     CloseWindow();
@@ -88,7 +85,7 @@ int main()
     return 0;
 }
 
-void UpdateDrawFrame(const Model model, const Camera3D camera_3d)
+void UpdateDrawFrame(const Model model)
 {
     BeginDrawing();
 

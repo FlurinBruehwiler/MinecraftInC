@@ -17,6 +17,20 @@ void InitWorld()
     }
 }
 
+bool GetChunkOfBlock(IntVector3 pos, Chunk* chunk)
+{
+    int chunkPosX = pos.x >= 0 ? pos.x / 32 : (pos.x - 31) / 32;
+    int chunkPosY = pos.y >= 0 ? pos.y / 32 : (pos.y - 31) / 32;
+    int chunkPosZ = pos.z >= 0 ? pos.z / 32 : (pos.z - 31) / 32;
+
+    if(chunkPosX < 0 || chunkPosY < 0 || chunkPosZ < 0 || chunkPosX > 9 || chunkPosY > 9 || chunkPosZ > 9){
+        return false;
+    }
+
+    *chunk = chunks[chunkPosX][chunkPosY][chunkPosZ];
+    return true;
+}
+
 bool GetBlockAtPos(IntVector3 pos, Block* block)
 {
     int chunkPosX = pos.x >= 0 ? pos.x / 32 : (pos.x - 31) / 32;

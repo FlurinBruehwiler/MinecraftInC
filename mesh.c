@@ -15,6 +15,8 @@ Vector3 topRightAway = (Vector3) {1,1,1};
 Vector3 topRightClose = (Vector3) {0,1,1};
 Vector3 topLeftClose = (Vector3) {0,1,0};
 
+
+
 bool IsAir(int x, int y, int z){
 
     Block block;

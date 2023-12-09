@@ -35,6 +35,7 @@ typedef struct Block {
 typedef struct Chunk {
     IntVector3 pos;
     Block blocks[32][32][32];
+    bool isDirty;
 } Chunk;
 
 typedef struct BlockTexture {
