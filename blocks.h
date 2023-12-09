@@ -9,9 +9,11 @@ extern BlockDefinition JoaMini;
 extern BlockDefinition JoaSchool;
 extern BlockDefinition JoaTruck;
 
+extern BlockDefinition* blockDefinitions;
+
 extern const int blockCount;
 
-BlockDefinition* initialize_blocks();
-void all_texture(BlockDefinition* blockDefinition, BlockTexture blockTexture);
+void initialize_blocks();
+void all_texture(BlockDefinition* blockDefinition, BlockTexture* blockTexture);
 
 #endif

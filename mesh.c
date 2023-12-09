@@ -2,6 +2,7 @@
 #include "structs.h"
 #include "mesh.h"
 #include "textures.h"
+#include "blocks.h"
 
 Vector3 bottomLeftAway = (Vector3) {1,0,0};
 Vector3 bottomRightAway = (Vector3) {1,0,1};
@@ -13,18 +14,42 @@ Vector3 topRightAway = (Vector3) {1,1,1};
 Vector3 topRightClose = (Vector3) {0,1,1};
 Vector3 topLeftClose = (Vector3) {0,1,0};
 
-void AddBlock(IntVector3 pos, VertexArray* floatArray, BlockDefinition blockDefinition)
-{
-    AddQuadFor(pos, floatArray, LEFT, blockDefinition);
-    AddQuadFor(pos, floatArray, RIGHT, blockDefinition);
-    AddQuadFor(pos, floatArray, TOP, blockDefinition);
-    AddQuadFor(pos, floatArray, BOTTOM, blockDefinition);
-    AddQuadFor(pos, floatArray, AWAY, blockDefinition);
-    AddQuadFor(pos, floatArray, CLOSE, blockDefinition);
+bool IsAir(Chunk* chunk, int x, int y, int z){
+    if (x >= 0 && x <= 31 && y >= 0 && y <= 31 && z >= 0 && z <= 31 ){
+        if (chunk->blocks[x][y][z].block_id == 0){
+            return true;
+        }
+        return false;
+    }
+    return true;
 }
 
-void AddQuadFor(IntVector3 pos, VertexArray* vertices, BlockFace block_face, BlockDefinition blockDefinition)
+void AddBlock(IntVector3 pos, VertexArray* vertexArray, char block_id, Chunk* chunk)
 {
+    if (IsAir(chunk, pos.x, pos.y, pos.z - 1)){
+        AddQuadFor(pos, vertexArray, LEFT, block_id);
+    }
+    if (IsAir(chunk, pos.x, pos.y, pos.z + 1)){
+        AddQuadFor(pos, vertexArray, RIGHT, block_id);
+    }
+    if (IsAir(chunk, pos.x, pos.y + 1, pos.z)){
+        AddQuadFor(pos, vertexArray, TOP, block_id);
+    }
+    if (IsAir(chunk, pos.x, pos.y - 1, pos.z)){
+        AddQuadFor(pos, vertexArray, BOTTOM, block_id);
+    }
+    if (IsAir(chunk, pos.x + 1, pos.y, pos.z)){
+        AddQuadFor(pos, vertexArray, AWAY, block_id);
+    }
+    if (IsAir(chunk, pos.x - 1, pos.y, pos.z)){
+        AddQuadFor(pos, vertexArray, CLOSE, block_id);
+    }
+}
+
+void AddQuadFor(IntVector3 pos, VertexArray* vertices, BlockFace block_face, char block_id)
+{
+    BlockDefinition blockDefinition = blockDefinitions[block_id];
+
     switch (block_face)
     {
         case LEFT:
@@ -58,11 +83,11 @@ float map(float value) {
     return value / (float)textureWidth;
 }
 
-void AddQuad(IntVector3 pos, VertexArray* vertices, Vector3 topLeft, Vector3 topRight, Vector3 bottomLeft, Vector3 bottomRight, BlockTexture blockTexture)
+void AddQuad(IntVector3 pos, VertexArray* vertices, Vector3 topLeft, Vector3 topRight, Vector3 bottomLeft, Vector3 bottomRight, BlockTexture* blockTexture)
 {
-    float left = map(blockTexture.topLeft.x);
-    float right = map(blockTexture.bottomRight.x);
-    float bottom = map(blockTexture.bottomRight.y);
+    float left = map(blockTexture->topLeft.x);
+    float right = map(blockTexture->bottomRight.x);
+    float bottom = map(blockTexture->bottomRight.y * 2);
 
     add_vertex(vertices, AddVector(pos, topLeft), (Vector2){left, bottom});
     add_vertex(vertices, AddVector(pos, bottomLeft), (Vector2){left, 0});

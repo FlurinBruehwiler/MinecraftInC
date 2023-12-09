@@ -50,12 +50,12 @@ typedef struct BlockTexture {
 typedef struct BlockDefinition {
     int id;
     char name[20];
-    BlockTexture leftTexture;
-    BlockTexture rightTexture;
-    BlockTexture topTexture;
-    BlockTexture bottomTexture;
-    BlockTexture awayTexture;
-    BlockTexture closeTexture;
+    BlockTexture* leftTexture;
+    BlockTexture* rightTexture;
+    BlockTexture* topTexture;
+    BlockTexture* bottomTexture;
+    BlockTexture* awayTexture;
+    BlockTexture* closeTexture;
 } BlockDefinition;
 
 #endif

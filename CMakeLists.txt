@@ -5,6 +5,7 @@ project(MinecraftInC C)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 FILE(COPY textures DESTINATION "${CMAKE_BINARY_DIR}")
+FILE(COPY shaders DESTINATION "${CMAKE_BINARY_DIR}")
 
 # Dependencies
 set(RAYLIB_VERSION 4.5.0)
@@ -32,7 +33,9 @@ add_executable(${PROJECT_NAME} main.c textures.c
         textures.h
         blocks.c
         blocks.h
-        mesh.c)
+        mesh.c
+        skybox.c
+        skybox.h)
 
 target_link_libraries(${PROJECT_NAME} raylib)
 

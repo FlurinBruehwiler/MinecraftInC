@@ -10,10 +10,12 @@ BlockDefinition JoaMini = {};
 BlockDefinition JoaSchool = {};
 BlockDefinition JoaTruck = {};
 
+BlockDefinition* blockDefinitions;
+
 const int blockCount = 5;
 
-BlockDefinition* initialize_blocks(){
-    BlockDefinition* blockDefinitions = malloc(sizeof(BlockDefinition) * blockCount);
+void initialize_blocks(){
+    blockDefinitions = malloc(sizeof(BlockDefinition) * blockCount);
 
     Air.id = 0;
     strcpy(Air.name, "Air");
@@ -38,11 +40,9 @@ BlockDefinition* initialize_blocks(){
     strcpy(JoaTruck.name, "JoaTruck");
     all_texture(&JoaTruck, joaTruckTexture);
     blockDefinitions[4] = JoaTruck;
-
-    return blockDefinitions;
 }
 
-void all_texture(BlockDefinition* blockDefinition, BlockTexture blockTexture){
+void all_texture(BlockDefinition* blockDefinition, BlockTexture* blockTexture){
     blockDefinition->leftTexture = blockTexture;
     blockDefinition->rightTexture = blockTexture;
     blockDefinition->closeTexture = blockTexture;
