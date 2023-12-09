@@ -5,6 +5,7 @@
 #include "blocks.h"
 #include "mesh.h"
 #include "skybox.h"
+#include "world.h"
 
 int screenWidth = 1500;
 int screenHeight = 1000;
@@ -21,24 +22,10 @@ int main()
 
     initialize_blocks();
 
-    SetTargetFPS(60);
+    SetTargetFPS(200);
     DisableCursor();
 
-    World *world = malloc(sizeof(World));
-
-    Chunk *chunk = malloc(sizeof(Chunk));
-    chunk->pos = (IntVector3){0,0,0};
-
-    world->chunks = chunk;
-
-    for (int x = 0; x < 32; ++x) {
-        for (int y = 0; y < 32; ++y) {
-            for (int z = 0; z < 32; ++z) {
-                int block_id = GetRandomValue(1, 4);
-                chunk->blocks[x][y][z] = (Block){ (char)block_id };
-            }
-        }
-    }
+    InitWorld();
 
     Mesh *mesh = malloc(sizeof(Mesh));
 
@@ -46,13 +33,15 @@ int main()
 
     VertexArray* vertexArray = create_vertex_array(48 * 3 * totalBlockCount);
 
+    Chunk* chunk = &chunks[0][0][0];
+
     for (int x = 0; x < 32; ++x) {
         for (int y = 0; y < 32; ++y) {
             for (int z = 0; z < 32; ++z) {
                 Block block = chunk->blocks[x][y][z];
 
                 if(block.block_id != 0){
-                    AddBlock((IntVector3){x, y, z}, vertexArray, block.block_id, chunk);
+                    AddBlock(LocalToGlobal(chunk, (IntVector3){x,y,z}), vertexArray, block.block_id);
                 }
             }
         }

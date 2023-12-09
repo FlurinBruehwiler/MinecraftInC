@@ -3,7 +3,7 @@
 
 #include "structs.h"
 
-void AddBlock(IntVector3 pos, VertexArray* vertexArray, char block_id, Chunk* chunk);
+void AddBlock(IntVector3 pos, VertexArray* vertexArray, char block_id);
 void AddQuadFor(IntVector3 pos, VertexArray* vertices, BlockFace block_face, char block_id);
 Vector3 AddVector(IntVector3 vec1, Vector3 vec2);
 float map(float value);

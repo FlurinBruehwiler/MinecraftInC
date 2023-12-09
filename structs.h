@@ -37,10 +37,6 @@ typedef struct Chunk {
     Block blocks[32][32][32];
 } Chunk;
 
-typedef struct World {
-    Chunk* chunks;
-} World;
-
 typedef struct BlockTexture {
     const char* name;
     Vector2 topLeft;

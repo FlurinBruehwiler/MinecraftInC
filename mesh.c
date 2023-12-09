@@ -3,6 +3,7 @@
 #include "mesh.h"
 #include "textures.h"
 #include "blocks.h"
+#include "world.h"
 
 Vector3 bottomLeftAway = (Vector3) {1,0,0};
 Vector3 bottomRightAway = (Vector3) {1,0,1};
@@ -14,34 +15,35 @@ Vector3 topRightAway = (Vector3) {1,1,1};
 Vector3 topRightClose = (Vector3) {0,1,1};
 Vector3 topLeftClose = (Vector3) {0,1,0};
 
-bool IsAir(Chunk* chunk, int x, int y, int z){
-    if (x >= 0 && x <= 31 && y >= 0 && y <= 31 && z >= 0 && z <= 31 ){
-        if (chunk->blocks[x][y][z].block_id == 0){
+bool IsAir(int x, int y, int z){
+
+    Block block;
+    if(GetBlockAtPos((IntVector3){x,y,z}, &block)){
+        if(block.block_id == 0)
             return true;
-        }
         return false;
     }
     return true;
 }
 
-void AddBlock(IntVector3 pos, VertexArray* vertexArray, char block_id, Chunk* chunk)
+void AddBlock(IntVector3 pos, VertexArray* vertexArray, char block_id)
 {
-    if (IsAir(chunk, pos.x, pos.y, pos.z - 1)){
+    if (IsAir(pos.x, pos.y, pos.z - 1)){
         AddQuadFor(pos, vertexArray, LEFT, block_id);
     }
-    if (IsAir(chunk, pos.x, pos.y, pos.z + 1)){
+    if (IsAir(pos.x, pos.y, pos.z + 1)){
         AddQuadFor(pos, vertexArray, RIGHT, block_id);
     }
-    if (IsAir(chunk, pos.x, pos.y + 1, pos.z)){
+    if (IsAir(pos.x, pos.y + 1, pos.z)){
         AddQuadFor(pos, vertexArray, TOP, block_id);
     }
-    if (IsAir(chunk, pos.x, pos.y - 1, pos.z)){
+    if (IsAir(pos.x, pos.y - 1, pos.z)){
         AddQuadFor(pos, vertexArray, BOTTOM, block_id);
     }
-    if (IsAir(chunk, pos.x + 1, pos.y, pos.z)){
+    if (IsAir(pos.x + 1, pos.y, pos.z)){
         AddQuadFor(pos, vertexArray, AWAY, block_id);
     }
-    if (IsAir(chunk, pos.x - 1, pos.y, pos.z)){
+    if (IsAir(pos.x - 1, pos.y, pos.z)){
         AddQuadFor(pos, vertexArray, CLOSE, block_id);
     }
 }

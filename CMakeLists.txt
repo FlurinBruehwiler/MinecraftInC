@@ -35,7 +35,10 @@ add_executable(${PROJECT_NAME} main.c textures.c
         blocks.h
         mesh.c
         skybox.c
-        skybox.h)
+        skybox.h
+        raycast.c
+        world.c
+        raycast.h)
 
 target_link_libraries(${PROJECT_NAME} raylib)
 
