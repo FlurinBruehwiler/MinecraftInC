@@ -31,12 +31,13 @@ void UpdatePlayer()
         IntVector3 previousBlock;
         float distance;
         if(Raycast(camera_3d.position, dir, 10, &blockPos, &previousBlock, &distance)){
-            Block block;
-            if(GetBlockAtPos(blockPos, &block)){
+            Block* blockPtr = NULL;
+            Block** block = &blockPtr;
+            if(GetBlockPtrAtPos(blockPos, block)){
                 Chunk* chunkPtr = NULL;
                 Chunk **chunk = &chunkPtr;
                 if(GetChunkOfBlock(blockPos, chunk)){
-                    block.block_id = 0;
+                    (*block)->block_id = 0;
                     (*chunk)->isDirty = true;
                     PrintVector3((Vector3){(float)blockPos.x, (float)blockPos.y, (float)blockPos.z});
                 }

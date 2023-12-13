@@ -5,6 +5,9 @@
 #include "skybox.h"
 #include "world.h"
 #include "player.h"
+#include "raycast.h"
+#include "raymath.h"
+#include <stdio.h>
 
 int screenWidth = 1500;
 int screenHeight = 1000;
@@ -57,6 +60,16 @@ void UpdateDrawFrame(const Model model)
         BeginMode3D(camera_3d);
             //DrawSkybox();
             DrawModel(model,  (Vector3) { 0,0,1 }, 1, WHITE);
+
+            Vector3 dir = Vector3Subtract(camera_3d.target, camera_3d.position);
+            IntVector3 block;
+            IntVector3 previousBlock;
+            float distance;
+            DrawLine3D((Vector3) { 0,0,0 }, Vector3Scale(dir, 10), RED);
+//            if(Raycast(camera_3d.position, dir, 100, &block, &previousBlock, &distance)){
+//                DrawCube((Vector3) { (float)block.x,(float)block.y, (float)block.z }, 1.1f, 1.1f, 1.1f, RED);
+//            }
+
         EndMode3D();
 
         DrawFPS(50, 50);

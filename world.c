@@ -44,6 +44,23 @@ bool GetChunkOfBlock(IntVector3 pos, Chunk** chunk)
     return true;
 }
 
+bool GetBlockPtrAtPos(IntVector3 pos, Block** block)
+{
+    int chunkPosX = pos.x >= 0 ? pos.x / 32 : (pos.x - 31) / 32;
+    int chunkPosY = pos.y >= 0 ? pos.y / 32 : (pos.y - 31) / 32;
+    int chunkPosZ = pos.z >= 0 ? pos.z / 32 : (pos.z - 31) / 32;
+    int blockPosX = pos.x >= 0 ? pos.x % 32 : 32 + (pos.x % 32);
+    int blockPosY = pos.y >= 0 ? pos.y % 32 : 32 + (pos.y % 32);
+    int blockPosZ = pos.z >= 0 ? pos.z % 32 : 32 + (pos.z % 32);
+
+    if(chunkPosX < 0 || chunkPosY < 0 || chunkPosZ < 0 || chunkPosX > 9 || chunkPosY > 9 || chunkPosZ > 9){
+        return false;
+    }
+
+    *block = &chunks[chunkPosX][chunkPosY][chunkPosZ].blocks[blockPosX][blockPosY][blockPosZ];
+    return true;
+}
+
 bool GetBlockAtPos(IntVector3 pos, Block* block)
 {
     int chunkPosX = pos.x >= 0 ? pos.x / 32 : (pos.x - 31) / 32;

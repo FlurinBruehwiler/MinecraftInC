@@ -33,12 +33,12 @@ void RegenDirtyChunks(){
 void GenMesh(Chunk* chunk){
     if(chunk->hasMesh){
         UnloadMesh(*chunk->mesh);
-        free(chunk->mesh);
     }
 
     Mesh *mesh = malloc(sizeof(Mesh));
+    *mesh = (Mesh){ };
 
-    VertexArray* vertexArray = create_vertex_array(48 * 3 * totalBlockCount);
+    VertexArray* vertexArray = create_vertex_array(2 * 3 * 6 * totalBlockCount);
 
     for (int x = 0; x < 32; ++x) {
         for (int y = 0; y < 32; ++y) {

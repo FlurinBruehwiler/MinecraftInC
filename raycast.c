@@ -4,7 +4,7 @@
 #include "raymath.h"
 #include "world.h"
 
-bool Raycast(Vector3 pos, Vector3 dir, float length, IntVector3 * hitBlock, IntVector3* previousBlock, float* distance){
+bool Raycast(Vector3 pos, Vector3 dir, float length, IntVector3* hitBlock, IntVector3* previousBlock, float* distance){
     dir = Vector3Normalize(dir);
     *distance = 0;
     IntVector3 start = (IntVector3){(int)pos.x, (int)pos.y, (int)pos.z};

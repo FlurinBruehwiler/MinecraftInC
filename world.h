@@ -9,6 +9,7 @@ extern const int totalBlockCount;
 
 void InitWorld();
 bool GetBlockAtPos(IntVector3 pos, Block* block);
+bool GetBlockPtrAtPos(IntVector3 pos, Block** block);
 IntVector3 LocalToGlobal(Chunk* chunk, IntVector3 localPos);
 bool GetChunkOfBlock(IntVector3 pos, Chunk** chunk);
 
