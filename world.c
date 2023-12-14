@@ -11,14 +11,15 @@ void InitWorld()
     for (int x = 0; x < 10; ++x) {
         for (int y = 0; y < 10; ++y) {
             for (int z = 0; z < 10; ++z) {
+                chunks[x][y][z].pos = (IntVector3){x, y, z};
+                chunks[x][y][z].isDirty = false;
                 chunks[x][y][z].isEmptyChunk = true;
             }
         }
     }
 
-    chunks[1][1][1].pos = (IntVector3){0, 0, 0};
-    chunks[1][1][1].isEmptyChunk = false;
     chunks[1][1][1].isDirty = true;
+    chunks[1][1][1].isEmptyChunk = false;
 
     for (int x = 0; x < 32; ++x) {
         for (int y = 0; y < 32; ++y) {
@@ -71,8 +72,7 @@ bool GetBlockAtPos(IntVector3 pos, Block* block)
     int blockPosZ = pos.z >= 0 ? pos.z % 32 : 32 + (pos.z % 32);
 
     if(chunkPosX < 0 || chunkPosY < 0 || chunkPosZ < 0 || chunkPosX > 9 || chunkPosY > 9 || chunkPosZ > 9){
-        *block = (Block){0};
-        return true;
+        return false;
     }
 
     *block = chunks[chunkPosX][chunkPosY][chunkPosZ].blocks[blockPosX][blockPosY][blockPosZ];
@@ -82,9 +82,9 @@ bool GetBlockAtPos(IntVector3 pos, Block* block)
 IntVector3 LocalToGlobal(Chunk* chunk, IntVector3 localPos)
 {
     return (IntVector3){
-            chunk->pos.x + localPos.x,
-            chunk->pos.y + localPos.y,
-            chunk->pos.z + localPos.z,
+            chunk->pos.x * 32 + localPos.x,
+            chunk->pos.y * 32 + localPos.y,
+            chunk->pos.z * 32 + localPos.z,
     };
 }
 
