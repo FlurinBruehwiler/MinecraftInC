@@ -7,12 +7,6 @@
 
 Camera3D camera_3d;
 
-void PrintVector3(Vector3 vector3){
-    printf("% .2f, ", vector3.x);
-    printf("% .2f, ", vector3.y);
-    printf("% .2f\n", vector3.z);
-}
-
 void InitPlayer(){
     camera_3d = (Camera3D){ };
     camera_3d.position = (Vector3) { 2, 2, 2};
@@ -39,7 +33,6 @@ void UpdatePlayer()
                 if(GetChunkOfBlock(blockPos, chunk)){
                     (*block)->block_id = 0;
                     (*chunk)->isDirty = true;
-                    PrintVector3((Vector3){(float)blockPos.x, (float)blockPos.y, (float)blockPos.z});
                 }
             }
         }

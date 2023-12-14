@@ -15,9 +15,9 @@ bool Raycast(Vector3 pos, Vector3 dir, float length, IntVector3* hitBlock, IntVe
                                    dir.z > 0 ? 1 : -1};
 
 
-    Vector3  delta = (Vector3){1 / dir.x > 0 ? 1 : -1,
-                                     1 / dir.y > 0 ? 1 : -1,
-                                     1 / dir.z > 0 ? 1 : -1};
+    Vector3  delta = (Vector3){(1 / dir.x) > 0 ? 1 : -1,
+                                     (1 / dir.y) > 0 ? 1 : -1,
+                                     (1 / dir.z) > 0 ? 1 : -1};
 
     Vector3 dist = (Vector3){
             step.x > 0 ? (float)start.x + 1 - pos.x : pos.x - (float)start.x,
