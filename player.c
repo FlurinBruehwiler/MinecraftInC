@@ -37,4 +37,22 @@ void UpdatePlayer()
             }
         }
     }
+    else if(IsMouseButtonPressed(MOUSE_BUTTON_RIGHT)){
+        Vector3 dir = Vector3Subtract(camera_3d.target, camera_3d.position);
+        IntVector3 blockPos;
+        IntVector3 previousBlock;
+        float distance;
+        if(Raycast(camera_3d.position, dir, 10, &blockPos, &previousBlock, &distance)){
+            Block* blockPtr = NULL;
+            Block** block = &blockPtr;
+            if(GetBlockPtrAtPos(previousBlock, block)){
+                Chunk* chunkPtr = NULL;
+                Chunk **chunk = &chunkPtr;
+                if(GetChunkOfBlock(previousBlock, chunk)){
+                    (*block)->block_id = 1;
+                    (*chunk)->isDirty = true;
+                }
+            }
+        }
+    }
 }
