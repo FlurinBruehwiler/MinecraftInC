@@ -18,7 +18,7 @@ int main()
 {
     InitWindow(screenWidth, screenHeight, "Minecraft in C");
 
-    //InitializeSkybox();
+    InitializeSkybox();
 
     LoadTextureAtlas();
 
@@ -67,9 +67,8 @@ void UpdateDrawFrame(const Model model)
         ClearBackground(WHITE);
 
         BeginMode3D(camera_3d);
-            //DrawSkybox();
+            DrawSkybox();
             DrawModel(model,  (Vector3) { 0,0,0 }, 1, WHITE);
-
             Vector3 dir = Vector3Subtract(camera_3d.target, camera_3d.position);
 
         EndMode3D();
@@ -79,6 +78,8 @@ void UpdateDrawFrame(const Model model)
         PrintVector3(dir, 2);
 
         DrawFPS(50, 50);
+        DrawRectangle(screenWidth / 2 - 9, screenHeight / 2, 22, 3, BLACK);
+        DrawRectangle(screenWidth / 2, screenHeight / 2 - 10, 3, 22, BLACK);
 
     EndDrawing();
 }
