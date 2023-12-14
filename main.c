@@ -64,7 +64,7 @@ void UpdateDrawFrame()
                 for (int y = 0; y < 10; ++y) {
                     for (int z = 0; z < 10; ++z) {
                         if(chunks[x][y][z].hasMesh){
-                            DrawModel(chunks[x][y][z].model, (Vector3) { (float)x * 32 ,(float)y * 32, (float)z * 32 }, 1, WHITE);
+                            DrawModel(chunks[x][y][z].model, (Vector3) { 0, 0, 0 }, 1, WHITE);
                         }
                     }
                 }
