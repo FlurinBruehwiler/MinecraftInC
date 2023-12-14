@@ -71,7 +71,8 @@ bool GetBlockAtPos(IntVector3 pos, Block* block)
     int blockPosZ = pos.z >= 0 ? pos.z % 32 : 32 + (pos.z % 32);
 
     if(chunkPosX < 0 || chunkPosY < 0 || chunkPosZ < 0 || chunkPosX > 9 || chunkPosY > 9 || chunkPosZ > 9){
-        return false;
+        *block = (Block){0};
+        return true;
     }
 
     *block = chunks[chunkPosX][chunkPosY][chunkPosZ].blocks[blockPosX][blockPosY][blockPosZ];

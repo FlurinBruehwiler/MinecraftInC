@@ -6,7 +6,7 @@
 
 bool Raycast(Vector3 pos, Vector3 dir, float length, IntVector3* hitBlock, IntVector3* previousBlock, float* distance){
     dir = Vector3Normalize(dir);
-    *distance = 0;
+    *distance = 0.0f;
     IntVector3 start = (IntVector3){(int)pos.x, (int)pos.y, (int)pos.z};
     *previousBlock = (IntVector3){0,0,0};
 
@@ -15,9 +15,9 @@ bool Raycast(Vector3 pos, Vector3 dir, float length, IntVector3* hitBlock, IntVe
                                    dir.z > 0 ? 1 : -1};
 
 
-    Vector3  delta = (Vector3){(1 / dir.x) > 0 ? 1 : -1,
-                                     (1 / dir.y) > 0 ? 1 : -1,
-                                     (1 / dir.z) > 0 ? 1 : -1};
+    Vector3  delta = (Vector3){fabsf(1 / dir.x),
+                            fabsf(1 / dir.y),
+                            fabsf(1 / dir.z)};
 
     Vector3 dist = (Vector3){
             step.x > 0 ? (float)start.x + 1 - pos.x : pos.x - (float)start.x,
@@ -37,8 +37,6 @@ bool Raycast(Vector3 pos, Vector3 dir, float length, IntVector3* hitBlock, IntVe
                 *hitBlock = start;
                 return true;
             }
-        }else{
-            return false;
         }
 
         *previousBlock = start;
