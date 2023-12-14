@@ -168,7 +168,7 @@ void AddQuad(IntVector3 pos, VertexArray* vertices, Vector3 topLeft, Vector3 top
 
 VertexArray* create_vertex_array(int capacity) {
     struct VertexArray* a = malloc(sizeof(VertexArray));
-    a->array = malloc(capacity * sizeof(float));
+    a->array = malloc(capacity * sizeof(Vertex));
     a->pos = 0;
     return a;
 }

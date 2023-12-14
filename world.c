@@ -16,15 +16,15 @@ void InitWorld()
         }
     }
 
-    chunks[0][0][0].pos = (IntVector3){0, 0, 0};
-    chunks[0][0][0].isEmptyChunk = false;
-    chunks[0][0][0].isDirty = true;
+    chunks[1][1][1].pos = (IntVector3){0, 0, 0};
+    chunks[1][1][1].isEmptyChunk = false;
+    chunks[1][1][1].isDirty = true;
 
     for (int x = 0; x < 32; ++x) {
         for (int y = 0; y < 32; ++y) {
             for (int z = 0; z < 32; ++z) {
                 int block_id = GetRandomValue(1, 4);
-                chunks[0][0][0].blocks[x][y][z] = (Block){(char)block_id };
+                chunks[1][1][1].blocks[x][y][z] = (Block){(char)block_id };
             }
         }
     }

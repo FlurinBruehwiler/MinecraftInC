@@ -12,7 +12,7 @@
 int screenWidth = 1500;
 int screenHeight = 1000;
 
-void UpdateDrawFrame(Model model);
+void UpdateDrawFrame();
 
 int main()
 {
@@ -35,15 +35,7 @@ int main()
     {
         RegenDirtyChunks();
         UpdatePlayer();
-        for (int x = 0; x < 10; ++x) {
-            for (int y = 0; y < 10; ++y) {
-                for (int z = 0; z < 10; ++z) {
-                    if(chunks[x][y][z].hasMesh){
-                        UpdateDrawFrame(chunks[x][y][z].model);
-                    }
-                }
-            }
-        }
+        UpdateDrawFrame();
     }
 
     CloseWindow();
@@ -60,7 +52,7 @@ void PrintVector3(Vector3 vector3, int index){
     DrawText(result, 10, (index + 1) * 50, 50, BLACK);
 }
 
-void UpdateDrawFrame(const Model model)
+void UpdateDrawFrame()
 {
     BeginDrawing();
 
@@ -68,7 +60,17 @@ void UpdateDrawFrame(const Model model)
 
         BeginMode3D(camera_3d);
             //DrawSkybox();
-            DrawModel(model,  (Vector3) { 0,0,0 }, 1, WHITE);
+            for (int x = 0; x < 10; ++x) {
+                for (int y = 0; y < 10; ++y) {
+                    for (int z = 0; z < 10; ++z) {
+                        Chunk chunk = chunks[x][y][z];
+                        if(chunk.hasMesh){
+                            DrawModel(chunk.model, (Vector3) {(float)x * 32 ,(float)y * 32,(float)z * 32}, 1, WHITE);
+                        }
+                    }
+                }
+            }
+
 
             Vector3 dir = Vector3Subtract(camera_3d.target, camera_3d.position);
 
