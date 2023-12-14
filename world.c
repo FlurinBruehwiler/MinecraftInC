@@ -5,21 +5,17 @@ Chunk chunks[10][10][10];
 
 const int totalBlockCount = 32 * 32 * 32;
 
-
 void InitWorld()
 {
     for (int x = 0; x < 10; ++x) {
         for (int y = 0; y < 10; ++y) {
             for (int z = 0; z < 10; ++z) {
                 chunks[x][y][z].pos = (IntVector3){x, y, z};
-                chunks[x][y][z].isDirty = false;
-                chunks[x][y][z].isEmptyChunk = true;
+                chunks[x][y][z].isDirty = true;
+                chunks[x][y][z].isEmptyChunk = false;
             }
         }
     }
-
-    chunks[1][1][1].isDirty = true;
-    chunks[1][1][1].isEmptyChunk = false;
 
     for (int x = 0; x < 32; ++x) {
         for (int y = 0; y < 32; ++y) {
