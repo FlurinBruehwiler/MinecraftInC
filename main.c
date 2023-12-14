@@ -60,9 +60,6 @@ void PrintVector3(Vector3 vector3, int index){
     DrawText(result, 10, (index + 1) * 50, 50, BLACK);
 }
 
-Vector3 lastRayStart = {};
-Vector3 lastRayEnd = {};
-
 void UpdateDrawFrame(const Model model)
 {
     BeginDrawing();
@@ -71,27 +68,9 @@ void UpdateDrawFrame(const Model model)
 
         BeginMode3D(camera_3d);
             //DrawSkybox();
-            DrawModel(model,  (Vector3) { 0,0,1 }, 1, WHITE);
+            DrawModel(model,  (Vector3) { 0,0,0 }, 1, WHITE);
 
             Vector3 dir = Vector3Subtract(camera_3d.target, camera_3d.position);
-            IntVector3 block;
-            IntVector3 previousBlock;
-            float distance;
-
-            if(IsMouseButtonPressed(MOUSE_BUTTON_RIGHT)){
-                lastRayStart = camera_3d.position;
-                lastRayEnd = Vector3Add(camera_3d.position, Vector3Scale(dir, 3));
-                if(Raycast(camera_3d.position, dir, 100, &block, &previousBlock, &distance)){
-                    DrawCubeWires((Vector3) { (float)block.x,(float)block.y, (float)block.z }, 1.1f, 1.1f, 1.1f, RED);
-                }
-            }
-
-            DrawLine3D(lastRayStart, lastRayEnd, RED);
-            DrawCube(lastRayStart, 0.1f, 0.1f, 0.1f, RED);
-            DrawCube(lastRayEnd, 0.1f, 0.1f, 0.1f, RED);
-
-            DrawLine3D((Vector3) { 0,0,0 }, dir, RED);
-            DrawCube(dir, 1, 1, 1, BLUE);
 
         EndMode3D();
 
