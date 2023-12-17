@@ -144,15 +144,19 @@ Vector3 AddVector(IntVector3 vec1, Vector3 vec2)
     return a;
 }
 
-float map(float value) {
+float mapX(float value) {
     return value / (float)textureWidth;
+}
+
+float mapY(float value) {
+    return value / (float)textureHeight;
 }
 
 void AddQuad(IntVector3 pos, VertexArray* vertices, Vector3 topLeft, Vector3 topRight, Vector3 bottomLeft, Vector3 bottomRight, BlockTexture* blockTexture)
 {
-    float left = map(blockTexture->topLeft.x);
-    float right = map(blockTexture->bottomRight.x);
-    float bottom = map(blockTexture->bottomRight.y * 2);
+    float left = mapX(blockTexture->topLeft.x);
+    float right = mapX(blockTexture->bottomRight.x);
+    float bottom = mapY(blockTexture->bottomRight.y);
 
     add_vertex(vertices, AddVector(pos, topLeft), (Vector2){left, bottom});
     add_vertex(vertices, AddVector(pos, bottomLeft), (Vector2){left, 0});

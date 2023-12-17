@@ -11,6 +11,7 @@ BlockTexture* grassTopTexture;
 Texture textureAtlas;
 
 int textureWidth = 0;
+int textureHeight = 0;
 
 void InitializeTextureDefinitions();
 
@@ -23,7 +24,6 @@ void LoadTextureAtlas() {
     blockTexture[1] = grassTexture;
     blockTexture[2] = grassTopTexture;
 
-    int maxHeight = 0;
     Texture2D textures[textureCount];
     for (int i = 0; i < textureCount; ++i) {
         char result[100];
@@ -32,15 +32,15 @@ void LoadTextureAtlas() {
         strcat(result, ".png");
         Texture2D texture = LoadTexture(result);
 
-        if (texture.height > maxHeight) {
-            maxHeight = texture.height;
+        if (texture.height > textureHeight) {
+            textureHeight = texture.height;
         }
         textureWidth += texture.width;
 
         textures[i] = texture;
     }
 
-    RenderTexture2D target = LoadRenderTexture(textureWidth, maxHeight);
+    RenderTexture2D target = LoadRenderTexture(textureWidth, textureHeight);
 
     BeginTextureMode(target);
 
@@ -48,7 +48,7 @@ void LoadTextureAtlas() {
 
     for (int i = 0; i < textureCount; ++i) {
         Texture2D texture2D = textures[i];
-        DrawTexture(texture2D, currentWidth, maxHeight - texture2D.height, WHITE);
+        DrawTexture(texture2D, currentWidth, textureHeight - texture2D.height, WHITE);
         blockTexture[i]->topLeft = (Vector2) {(float) currentWidth, 0};
         blockTexture[i]->bottomRight = (Vector2) {(float) currentWidth + (float) texture2D.width,
                                                  (float) texture2D.height};

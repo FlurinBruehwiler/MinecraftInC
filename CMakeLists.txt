@@ -39,7 +39,8 @@ add_executable(${PROJECT_NAME} main.c textures.c
         raycast.c
         world.c
         raycast.h
-        player.c)
+        player.c
+        perlin.c)
 
 target_link_libraries(${PROJECT_NAME} raylib)
 

@@ -9,6 +9,7 @@ extern BlockTexture* grassTexture;
 extern BlockTexture* grassTopTexture;
 
 extern int textureWidth;
+extern int textureHeight;
 
 extern Texture textureAtlas;
 
