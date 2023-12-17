@@ -4,16 +4,16 @@
 #include "structs.h"
 
 extern BlockDefinition Air;
-extern BlockDefinition JoaChoco;
-extern BlockDefinition JoaMini;
-extern BlockDefinition JoaSchool;
-extern BlockDefinition JoaTruck;
+extern BlockDefinition Grass;
+extern BlockDefinition Dirt;
 
 extern BlockDefinition* blockDefinitions;
 
 extern const int blockCount;
 
 void initialize_blocks();
+
+void side_texture(BlockDefinition* blockDefinition, BlockTexture* blockTexture);
 void all_texture(BlockDefinition* blockDefinition, BlockTexture* blockTexture);
 
 #endif

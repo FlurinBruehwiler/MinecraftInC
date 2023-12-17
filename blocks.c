@@ -5,10 +5,8 @@
 #include "blocks.h"
 
 BlockDefinition Air = {};
-BlockDefinition JoaChoco = {};
-BlockDefinition JoaMini = {};
-BlockDefinition JoaSchool = {};
-BlockDefinition JoaTruck = {};
+BlockDefinition Grass = {};
+BlockDefinition Dirt = {};
 
 BlockDefinition* blockDefinitions;
 
@@ -20,26 +18,24 @@ void initialize_blocks(){
     Air.id = 0;
     strcpy(Air.name, "Air");
     blockDefinitions[0] = Air;
+//
+//    CmiBlock.id = 1;
+//    strcpy(CmiBlock.name, "CMI");
+//    all_texture(&CmiBlock, cmiTexture);
+//    blockDefinitions[1] = CmiBlock;
 
-    JoaChoco.id = 1;
-    strcpy(JoaChoco.name, "JoaChoco");
-    all_texture(&JoaChoco, joaChocoTexture);
-    blockDefinitions[1] = JoaChoco;
+    Grass.id = 1;
+    strcpy(Grass.name, "Grass");
+    side_texture(&Grass, grassTexture);
+    Grass.topTexture = grassTopTexture;
+    Grass.bottomTexture = dirtTexture;
+    blockDefinitions[1] = Grass;
 
-    JoaMini.id = 2;
-    strcpy(JoaMini.name, "JoaMini");
-    all_texture(&JoaMini, joaMiniTexture);
-    blockDefinitions[2] = JoaMini;
+    Dirt.id = 2;
+    strcpy(Dirt.name, "Dirt");
+    all_texture(&Dirt, grassTexture);
 
-    JoaSchool.id = 3;
-    strcpy(JoaSchool.name, "JoaSchool");
-    all_texture(&JoaSchool, joaSchoolTexture);
-    blockDefinitions[3] = JoaSchool;
-
-    JoaTruck.id = 4;
-    strcpy(JoaTruck.name, "JoaTruck");
-    all_texture(&JoaTruck, joaTruckTexture);
-    blockDefinitions[4] = JoaTruck;
+    blockDefinitions[2] = Dirt;
 }
 
 void all_texture(BlockDefinition* blockDefinition, BlockTexture* blockTexture){
@@ -49,4 +45,11 @@ void all_texture(BlockDefinition* blockDefinition, BlockTexture* blockTexture){
     blockDefinition->awayTexture = blockTexture;
     blockDefinition->topTexture = blockTexture;
     blockDefinition->bottomTexture = blockTexture;
+}
+
+void side_texture(BlockDefinition* blockDefinition, BlockTexture* blockTexture){
+    blockDefinition->leftTexture = blockTexture;
+    blockDefinition->rightTexture = blockTexture;
+    blockDefinition->closeTexture = blockTexture;
+    blockDefinition->awayTexture = blockTexture;
 }

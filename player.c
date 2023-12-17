@@ -9,8 +9,8 @@ Camera3D camera_3d;
 
 void InitPlayer(){
     camera_3d = (Camera3D){ };
-    camera_3d.position = (Vector3) { 2, 2, 2};
-    camera_3d.target = (Vector3) {0,0,0};
+    camera_3d.position = (Vector3) { -5, 40, -5};
+    camera_3d.target = (Vector3) {40,0,40};
     camera_3d.up = (Vector3) {0, 1, 0};
     camera_3d.fovy = 100;
 }

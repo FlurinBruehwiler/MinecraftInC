@@ -4,10 +4,9 @@
 #include "structs.h"
 #include "raylib.h"
 
-extern BlockTexture* joaChocoTexture;
-extern BlockTexture* joaMiniTexture;
-extern BlockTexture* joaSchoolTexture;
-extern BlockTexture* joaTruckTexture;
+extern BlockTexture* dirtTexture;
+extern BlockTexture* grassTexture;
+extern BlockTexture* grassTopTexture;
 
 extern int textureWidth;
 

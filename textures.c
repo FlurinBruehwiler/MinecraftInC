@@ -4,10 +4,9 @@
 #include <malloc.h>
 #include "textures.h"
 
-BlockTexture* joaChocoTexture;
-BlockTexture* joaMiniTexture;
-BlockTexture* joaSchoolTexture;
-BlockTexture* joaTruckTexture;
+BlockTexture* dirtTexture;
+BlockTexture* grassTexture;
+BlockTexture* grassTopTexture;
 
 Texture textureAtlas;
 
@@ -18,12 +17,11 @@ void InitializeTextureDefinitions();
 void LoadTextureAtlas() {
     InitializeTextureDefinitions();
 
-    const int textureCount = 4;
+    const int textureCount = 3;
     BlockTexture* blockTexture[textureCount];
-    blockTexture[0] = joaChocoTexture;
-    blockTexture[1] = joaMiniTexture;
-    blockTexture[2] = joaSchoolTexture;
-    blockTexture[3] = joaTruckTexture;
+    blockTexture[0] = dirtTexture;
+    blockTexture[1] = grassTexture;
+    blockTexture[2] = grassTopTexture;
 
     int maxHeight = 0;
     Texture2D textures[textureCount];
@@ -67,16 +65,12 @@ void LoadTextureAtlas() {
 }
 
 void InitializeTextureDefinitions(){
+    dirtTexture = malloc(sizeof(BlockTexture));
+    dirtTexture->name = "dirt";
 
-    joaChocoTexture = malloc(sizeof(BlockTexture));
-    joaChocoTexture->name = "joaChoco";
+    grassTexture = malloc(sizeof(BlockTexture));
+    grassTexture->name = "grass";
 
-    joaMiniTexture = malloc(sizeof(BlockTexture));
-    joaMiniTexture->name = "joaMini";
-
-    joaSchoolTexture = malloc(sizeof(BlockTexture));
-    joaSchoolTexture->name = "joaSchool";
-
-    joaTruckTexture = malloc(sizeof(BlockTexture));
-    joaTruckTexture->name = "joaTruck";
+    grassTopTexture = malloc(sizeof(BlockTexture));
+    grassTopTexture->name = "grasstop";
 }
