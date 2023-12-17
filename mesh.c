@@ -55,7 +55,7 @@ void GenMesh(Chunk* chunk){
     float* vertices = malloc(sizeof(float) * vertexArray->pos * 3);
     float* texCoords = malloc(sizeof(float) * vertexArray->pos * 2);
 
-    for (int i = 0; i < vertexArray->pos - 1; ++i) {
+    for (int i = 0; i < vertexArray->pos; ++i) {
 
         Vertex vertex = vertexArray->array[i];
 
@@ -68,7 +68,7 @@ void GenMesh(Chunk* chunk){
     }
 
     mesh->vertexCount = vertexArray->pos;
-    mesh->triangleCount = vertexArray->pos;
+    mesh->triangleCount = vertexArray->pos / 3;
     mesh->vertices = vertices;
     mesh->texcoords = texCoords;
 
