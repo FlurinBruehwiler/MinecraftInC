@@ -20,7 +20,7 @@ void RegenDirtyChunks(){
     for (int i = 0; i < chunkCount; ++i) {
         if(chunks[i]){
             if(chunks[i]->isDirty && !chunks[i]->isEmptyChunk){
-                printf("regen chunk \n");
+                printf("regen chunk %d, %d, %d \n", chunks[i]->pos.x, chunks[i]->pos.y, chunks[i]->pos.z);
                 chunks[i]->isDirty = false;
                 GenMesh(chunks[i]);
             }

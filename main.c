@@ -33,6 +33,7 @@ int main()
 
     while (!WindowShouldClose())
     {
+        GenChunksInRenderDistance();
         RegenDirtyChunks();
         UpdatePlayer();
         UpdateDrawFrame();
