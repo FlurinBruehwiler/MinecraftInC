@@ -38,7 +38,6 @@ typedef struct Chunk {
     bool isDirty;
     Model model;
     Mesh* mesh;
-    bool hasMesh;
     bool isEmptyChunk;
 } Chunk;
 

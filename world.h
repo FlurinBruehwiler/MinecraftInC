@@ -4,9 +4,13 @@
 #include <stdbool.h>
 #include "structs.h"
 
-extern Chunk chunks[10][10][10];
+extern Chunk** chunks;
 extern const int totalBlockCount;
+extern const int chunkCount;
 
+int GetChunkIndex(int x, int y, int z);
+Chunk* GetChunk(int x, int y, int z);
+void GenChunk(int chunkX, int chunkY, int chunkZ);
 void InitWorld();
 bool GetBlockAtPos(IntVector3 pos, Block* block);
 bool GetBlockPtrAtPos(IntVector3 pos, Block** block);

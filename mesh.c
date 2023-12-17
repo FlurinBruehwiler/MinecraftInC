@@ -17,21 +17,19 @@ Vector3 topRightClose = (Vector3) {0,1,1};
 Vector3 topLeftClose = (Vector3) {0,1,0};
 
 void RegenDirtyChunks(){
-    for (int x = 0; x < 10; ++x) {
-        for (int y = 0; y < 10; ++y) {
-            for (int z = 0; z < 10; ++z) {
-                if(chunks[x][y][z].isDirty && !chunks[x][y][z].isEmptyChunk){
-                    printf("regen chunk \n");
-                    chunks[x][y][z].isDirty = false;
-                    GenMesh(&chunks[x][y][z]);
-                }
+    for (int i = 0; i < chunkCount; ++i) {
+        if(chunks[i]){
+            if(chunks[i]->isDirty && !chunks[i]->isEmptyChunk){
+                printf("regen chunk \n");
+                chunks[i]->isDirty = false;
+                GenMesh(chunks[i]);
             }
         }
     }
 }
 
 void GenMesh(Chunk* chunk){
-    if(chunk->hasMesh){
+    if(chunk->mesh){
         UnloadMesh(*chunk->mesh);
     }
 
@@ -78,7 +76,6 @@ void GenMesh(Chunk* chunk){
     model.materials[0].maps->texture = textureAtlas;
     chunk->model = model;
     chunk->mesh = mesh;
-    chunk->hasMesh = true;
 }
 
 bool IsAir(int x, int y, int z){

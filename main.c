@@ -60,13 +60,10 @@ void UpdateDrawFrame()
 
         BeginMode3D(camera_3d);
             DrawSkybox();
-            for (int x = 0; x < 10; ++x) {
-                for (int y = 0; y < 10; ++y) {
-                    for (int z = 0; z < 10; ++z) {
-                        if(chunks[x][y][z].hasMesh){
-                            DrawModel(chunks[x][y][z].model, (Vector3) { 0, 0, 0 }, 1, WHITE);
-                        }
-                    }
+
+            for (int i = 0; i < chunkCount; ++i) {
+                if(chunks[i]){
+                    DrawModel(chunks[i]->model, (Vector3) { 0, 0, 0 }, 1, WHITE);
                 }
             }
 
