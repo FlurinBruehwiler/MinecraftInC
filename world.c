@@ -45,7 +45,7 @@ void GenChunk(int chunkX, int chunkY, int chunkZ){
 
 void GenChunksInRenderDistance()
 {
-    const int renderDistance = 8;
+    const int renderDistance = 1;
     IntVector3 chunkPos = GetChunkPos((IntVector3){(int)camera_3d.position.x, (int)camera_3d.position.y, (int)camera_3d.position.z});
 
     for (int x = -renderDistance; x < renderDistance; x++)
@@ -91,9 +91,12 @@ bool GetBlockPtrAtPos(IntVector3 pos, Block** block)
     int chunkPosX = pos.x >= 0 ? pos.x / 32 : (pos.x - 31) / 32;
     int chunkPosY = pos.y >= 0 ? pos.y / 32 : (pos.y - 31) / 32;
     int chunkPosZ = pos.z >= 0 ? pos.z / 32 : (pos.z - 31) / 32;
-    int blockPosX = pos.x >= 0 ? pos.x % 32 : 32 + (pos.x % 32);
-    int blockPosY = pos.y >= 0 ? pos.y % 32 : 32 + (pos.y % 32);
-    int blockPosZ = pos.z >= 0 ? pos.z % 32 : 32 + (pos.z % 32);
+
+// Ensure block coordinates are positive within the chunk
+    int blockPosX = (pos.x >= 0 ? pos.x % 32 : (pos.x % 32 + 32)) % 32;
+    int blockPosY = (pos.y >= 0 ? pos.y % 32 : (pos.y % 32 + 32)) % 32;
+    int blockPosZ = (pos.z >= 0 ? pos.z % 32 : (pos.z % 32 + 32)) % 32;
+
 
     if(!ChunkIsLoaded(chunkPosX, chunkPosY, chunkPosZ))
         return false;
@@ -107,9 +110,12 @@ bool GetBlockAtPos(IntVector3 pos, Block* block)
     int chunkPosX = pos.x >= 0 ? pos.x / 32 : (pos.x - 31) / 32;
     int chunkPosY = pos.y >= 0 ? pos.y / 32 : (pos.y - 31) / 32;
     int chunkPosZ = pos.z >= 0 ? pos.z / 32 : (pos.z - 31) / 32;
-    int blockPosX = pos.x >= 0 ? pos.x % 32 : 31 + (pos.x % 32);
-    int blockPosY = pos.y >= 0 ? pos.y % 32 : 31 + (pos.y % 32);
-    int blockPosZ = pos.z >= 0 ? pos.z % 32 : 31 + (pos.z % 32);
+
+// Ensure block coordinates are positive within the chunk
+    int blockPosX = (pos.x >= 0 ? pos.x % 32 : (pos.x % 32 + 32)) % 32;
+    int blockPosY = (pos.y >= 0 ? pos.y % 32 : (pos.y % 32 + 32)) % 32;
+    int blockPosZ = (pos.z >= 0 ? pos.z % 32 : (pos.z % 32 + 32)) % 32;
+
 
     if(!ChunkIsLoaded(chunkPosX, chunkPosY, chunkPosZ))
         return false;
