@@ -5,8 +5,8 @@
 #include "skybox.h"
 #include "world.h"
 #include "player.h"
-#include "raycast.h"
 #include "raymath.h"
+#include "perlin.h"
 #include <stdio.h>
 
 int screenWidth = 1500;
@@ -18,6 +18,7 @@ int main()
 {
     InitWindow(screenWidth, screenHeight, "Minecraft in C");
 
+    InitializePerlin();
     InitializeSkybox();
 
     LoadTextureAtlas();

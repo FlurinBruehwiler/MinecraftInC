@@ -3,6 +3,7 @@
 #include "structs.h"
 #include "player.h"
 #include "world.h"
+#include "perlin.h"
 
 Chunk** chunks;
 
@@ -25,6 +26,8 @@ bool ChunkIsLoaded(int x, int y, int z)
     return chunks[GetChunkIndex(x, y, z)];
 }
 
+const float scale = 0.025f;
+
 void GenChunk(int chunkX, int chunkY, int chunkZ){
     Chunk* chunk = malloc(sizeof(Chunk));
     chunk->pos = (IntVector3){chunkX, chunkY, chunkZ};
@@ -34,10 +37,25 @@ void GenChunk(int chunkX, int chunkY, int chunkZ){
     chunks[GetChunkIndex(chunkX, chunkY, chunkZ)] = chunk;
 
     for (int x = 0; x < 32; ++x) {
-        for (int y = 0; y < 32; ++y) {
-            for (int z = 0; z < 32; ++z) {
-                int block_id = chunkY == 0 ? 1 : 0;
-                chunk->blocks[x][y][z] = (Block){(char)block_id };
+        for (int z = 0; z < 32; ++z) {
+
+            int globalX = x + chunkY * 32;
+            int globalZ = z + chunkZ * 32;
+
+            double res = OctavePerlin(((float)globalX + 100000.0f) * scale, 0, ((float)globalZ + 100000.0f) * scale, 1, 2);
+            int height = (int)(res * 32 * 5);
+
+            for (int y = 0; y < 32; ++y) {
+                Block block;
+                if(chunkY * 32 + y > height){
+                    block = (Block){(char)0 };
+                }
+                else if(chunkY * 32 + y == height){
+                    block = (Block){(char)1 };
+                }else{
+                    block = (Block){(char)2 };
+                }
+                chunk->blocks[x][y][z] = block;
             }
         }
     }
@@ -45,7 +63,7 @@ void GenChunk(int chunkX, int chunkY, int chunkZ){
 
 void GenChunksInRenderDistance()
 {
-    const int renderDistance = 1;
+    const int renderDistance = 8;
     IntVector3 chunkPos = GetChunkPos((IntVector3){(int)camera_3d.position.x, (int)camera_3d.position.y, (int)camera_3d.position.z});
 
     for (int x = -renderDistance; x < renderDistance; x++)
