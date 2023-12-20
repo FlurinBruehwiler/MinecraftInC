@@ -39,11 +39,13 @@ void GenChunk(int chunkX, int chunkY, int chunkZ){
     for (int x = 0; x < 32; ++x) {
         for (int z = 0; z < 32; ++z) {
 
-            int globalX = x + chunkY * 32;
-            int globalZ = z + chunkZ * 32;
+            int globalX = x + (chunkX * 32);
+            int globalZ = z + (chunkZ * 32);
+
+
 
             double res = OctavePerlin(((float)globalX + 100000.0f) * scale, 0, ((float)globalZ + 100000.0f) * scale, 1, 2);
-            int height = (int)(res * 32 * 5);
+            int height = (int)(res * 32 * 3);
 
             for (int y = 0; y < 32; ++y) {
                 Block block;
