@@ -33,7 +33,7 @@ void initialize_blocks(){
 
     Dirt.id = 2;
     strcpy(Dirt.name, "Dirt");
-    all_texture(&Dirt, grassTexture);
+    all_texture(&Dirt, dirtTexture);
 
     blockDefinitions[2] = Dirt;
 }
