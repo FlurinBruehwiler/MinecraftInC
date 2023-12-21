@@ -58,4 +58,11 @@ typedef struct BlockDefinition {
     BlockTexture* closeTexture;
 } BlockDefinition;
 
+typedef struct RaycastResult {
+    IntVector3 hitBlock;
+    IntVector3 previousBlock;
+    float distance;
+    bool hasHit;
+} RayCastResult;
+
 #endif

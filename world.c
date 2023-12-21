@@ -66,7 +66,7 @@ void GenChunk(int chunkX, int chunkY, int chunkZ){
 void GenChunksInRenderDistance()
 {
     const int renderDistance = 8;
-    IntVector3 chunkPos = GetChunkPos((IntVector3){(int)camera_3d.position.x, (int)camera_3d.position.y, (int)camera_3d.position.z});
+    IntVector3 chunkPos = GetChunkPos((IntVector3){(int)playerCam.position.x, (int)playerCam.position.y, (int)playerCam.position.z});
 
     for (int x = -renderDistance; x < renderDistance; x++)
     {

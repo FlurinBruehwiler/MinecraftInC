@@ -34,9 +34,6 @@ int main()
 
     while (!WindowShouldClose())
     {
-        GenChunksInRenderDistance();
-        RegenDirtyChunks();
-        UpdatePlayer();
         UpdateDrawFrame();
     }
 
@@ -60,8 +57,12 @@ void UpdateDrawFrame()
 
         ClearBackground(WHITE);
 
-        BeginMode3D(camera_3d);
+        BeginMode3D(useDebugCam ? debugCam : playerCam);
             DrawSkybox();
+
+            GenChunksInRenderDistance();
+            RegenDirtyChunks();
+            UpdatePlayer();
 
             for (int i = 0; i < chunkCount; ++i) {
                 if(chunks[i]){
@@ -69,13 +70,11 @@ void UpdateDrawFrame()
                 }
             }
 
-            Vector3 dir = Vector3Subtract(camera_3d.target, camera_3d.position);
+            DrawPlayer();
 
         EndMode3D();
 
-        PrintVector3(camera_3d.position, 0);
-        PrintVector3(camera_3d.target, 1);
-        PrintVector3(dir, 2);
+        PrintVector3(playerCam.position, 0);
 
         DrawFPS(50, 50);
 

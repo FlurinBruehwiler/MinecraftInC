@@ -4,11 +4,16 @@
 #include "raymath.h"
 #include "world.h"
 
-bool Raycast(Vector3 pos, Vector3 dir, float length, IntVector3* hitBlock, IntVector3* previousBlock, float* distance){
+
+
+RayCastResult RayCast(Vector3 pos, Vector3 dir, float length){
     dir = Vector3Normalize(dir);
-    *distance = 0.0f;
+
+    RayCastResult raycastResult = {};
+    raycastResult.distance = 0.0f;
+
     IntVector3 start = (IntVector3){(int)pos.x, (int)pos.y, (int)pos.z};
-    *previousBlock = (IntVector3){0,0,0};
+    raycastResult.previousBlock = (IntVector3){0,0,0};
 
     IntVector3 step = (IntVector3){dir.x > 0 ? 1 : -1,
                                    dir.y > 0 ? 1 : -1,
@@ -29,30 +34,31 @@ bool Raycast(Vector3 pos, Vector3 dir, float length, IntVector3* hitBlock, IntVe
                 delta.y * dist.y,
                 delta.z * dist.z};
 
-    while (*distance <= length)
+    while (raycastResult.distance <= length)
     {
         Block block;
         if(GetBlockAtPos(start, &block)){
             if(block.block_id != 0){
-                *hitBlock = start;
-                return true;
+                raycastResult.hitBlock = start;
+                raycastResult.hasHit = true;
+                return raycastResult;
             }
         }
 
-        *previousBlock = start;
+        raycastResult.previousBlock = start;
 
         if (tMax.x < tMax.y)
         {
             if (tMax.x < tMax.z)
             {
                 start.x += step.x;
-                *distance = tMax.x;
+                raycastResult.distance = tMax.x;
                 tMax.x += delta.x;
             }
             else
             {
                 start.z += step.z;
-                *distance = tMax.z;
+                raycastResult.distance = tMax.z;
                 tMax.z += delta.z;
             }
         }
@@ -61,17 +67,18 @@ bool Raycast(Vector3 pos, Vector3 dir, float length, IntVector3* hitBlock, IntVe
             if (tMax.y < tMax.z)
             {
                 start.y += step.y;
-                *distance = tMax.y;
+                raycastResult.distance = tMax.y;
                 tMax.y += delta.y;
             }
             else
             {
                 start.z += step.z;
-                *distance = tMax.z;
+                raycastResult.distance = tMax.z;
                 tMax.z += delta.z;
             }
         }
     }
-    
-    return false;
+
+    raycastResult.hasHit = false;
+    return raycastResult;
 }

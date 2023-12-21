@@ -3,8 +3,11 @@
 
 #include "raylib.h"
 
-extern Camera3D camera_3d;
+extern bool useDebugCam;
+extern Camera3D debugCam;
+extern Camera3D playerCam;
 void InitPlayer();
 void UpdatePlayer();
+void DrawPlayer();
 
 #endif
